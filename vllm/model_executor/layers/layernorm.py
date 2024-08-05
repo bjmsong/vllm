@@ -30,12 +30,14 @@ class RMSNorm(CustomOp):
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """PyTorch-native implementation equivalent to forward()."""
         orig_dtype = x.dtype
-        x = x.to(torch.float32)
+        x = x.to(torch.float32) # Why?
         if residual is not None:
             x = x + residual.to(torch.float32)
             residual = x.to(orig_dtype)
 
+        # 先平方，然后对最后一个维度的所有元素求平均值，并保留最后这个维度
         variance = x.pow(2).mean(dim=-1, keepdim=True)
+        # torch.rsqrt：求平方根，再倒数
         x = x * torch.rsqrt(variance + self.variance_epsilon)
         x = x.to(orig_dtype) * self.weight
         if residual is None:

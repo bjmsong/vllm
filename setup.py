@@ -457,8 +457,8 @@ if envs.VLLM_USE_PRECOMPILED:
     package_data["vllm"].append("*.so")
 
 setup(
-    name="vllm",
-    version=get_vllm_version(),
+    name="vllm", # 包的名称
+    version=get_vllm_version(), # 包的版本
     author="vLLM Team",
     license="Apache 2.0",
     description=("A high-throughput and memory-efficient inference and "
@@ -481,8 +481,8 @@ setup(
     packages=find_packages(exclude=("benchmarks", "csrc", "docs", "examples",
                                     "tests*")),
     python_requires=">=3.8",
-    install_requires=get_requirements(),
-    ext_modules=ext_modules,
+    install_requires=get_requirements(),  # 安装python依赖包
+    ext_modules=ext_modules,  # 指定需要编译的C++扩展模块
     extras_require={
         "tensorizer": ["tensorizer>=2.9.0"],
     },

@@ -10,6 +10,8 @@
 
 // A version of the TORCH_LIBRARY macro that expands the NAME, i.e. so NAME
 // could be a macro instead of a literal token.
+// TORCH_LIBRARY 是PyTorch定义的宏，用于定义一个新的 C++ 扩展库
+// 将TORCH_LIBRARY重命名为TORCH_LIBRARY_EXPAND
 #define TORCH_LIBRARY_EXPAND(NAME, MODULE) TORCH_LIBRARY(NAME, MODULE)
 
 // REGISTER_EXTENSION allows the shared library to be loaded and initialized
