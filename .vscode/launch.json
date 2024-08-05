@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "python": "/root/miniconda3/envs/vllmenv2/bin/python",
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "examples/offline_inference.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+            ]
+        }
+    ]
+}
+
+
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "python": "/root/miniconda3/envs/vllmenv/bin/python",
+//             "name": "Python: 当前文件",
+//             "type": "python",
+//             "request": "launch",
+//             "program": "benchmarks/benchmark_serving.py",
+//             "console": "integratedTerminal",
+//             "justMyCode": false,
+//             "args": ["--model", "meta-llama/Llama-2-7b-hf", 
+//             "--dataset", "ShareGPT_V3_unfiltered_cleaned_split.json"
+//             ]
+//         }
+//     ]
+// }

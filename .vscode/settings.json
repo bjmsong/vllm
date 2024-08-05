@@ -1,0 +1,15 @@
+{
+    "files.associations":{"*.cu":"cpp"},
+    "clangd.fallbackFlags": [
+        "-std=c++17",
+        // 增加项目自身头文件依赖路径，因为使用vs2019编译不会生成compile_command.json文件，项目自己的头文件就不会找到
+        "-I${workspaceFolder}/csrc",
+        "-I/usr/local/cuda/targets/x86_64-linux/include",
+        "-I/usr/include/c++/11",
+        "-I/usr/lib/gcc/x86_64-linux-gnu/11/include",
+        "-I/root/miniconda3/envs/vllmenv2/lib/python3.10/site-packages/torch/include",
+        "-I/root/miniconda3/envs/vllmenv2/lib/python3.10/site-packages/torch/include/torch/csrc/api/include",
+        "-I/root/miniconda3/envs/vllmenv2/include/python3.10",
+        "--gcc-toolchain=/usr/bin/gcc"
+      ]
+}
