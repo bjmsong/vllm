@@ -458,6 +458,7 @@ class SequenceGroup:
         self.prompt_adapter_request = prompt_adapter_request
         self.encoder_seq = encoder_seq
         self.trace_headers = trace_headers
+        # self.seqs_dict中第一个 Sequence 对象
         self._first_seq = next(iter(self.seqs_dict.values()))
 
     @property

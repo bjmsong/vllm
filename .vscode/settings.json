@@ -4,6 +4,11 @@
         "-std=c++17",
         // 增加项目自身头文件依赖路径，因为使用vs2019编译不会生成compile_command.json文件，项目自己的头文件就不会找到
         "-I${workspaceFolder}/csrc",
+        "-I${workspaceFolder}/csrc/cpu",
+        "-I${workspaceFolder}/csrc/attention",
+        "-I${workspaceFolder}/csrc/moe",
+        "-I${workspaceFolder}/csrc/quantization",
+        "-I${workspaceFolder}/csrc/prepare_inputs",
         "-I/usr/local/cuda/targets/x86_64-linux/include",
         "-I/usr/include/c++/11",
         "-I/usr/lib/gcc/x86_64-linux-gnu/11/include",

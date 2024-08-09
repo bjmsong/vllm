@@ -16,6 +16,7 @@ namespace vec_op {
   AT_DISPATCH_CASE(at::ScalarType::Float, __VA_ARGS__)                         \
   AT_DISPATCH_CASE(at::ScalarType::BFloat16, __VA_ARGS__)
 
+// 根据不同的浮点数类型，执行不同的代码片段
 #define VLLM_DISPATCH_FLOATING_TYPES(TYPE, NAME, ...)                          \
   AT_DISPATCH_SWITCH(TYPE, NAME, VLLM_DISPATCH_CASE_FLOATING_TYPES(__VA_ARGS__))
 
