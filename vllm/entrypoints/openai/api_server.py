@@ -171,6 +171,7 @@ def build_app(args: Namespace) -> FastAPI:
 
     mount_metrics(app)
 
+    # 添加中间件，用于处理跨域资源共享（CORS）请求
     app.add_middleware(
         CORSMiddleware,
         allow_origins=args.allowed_origins,

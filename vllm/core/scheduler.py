@@ -51,6 +51,7 @@ class SchedulingBudget:
     """
     token_budget: int
     max_num_seqs: int
+    # 每个实例在创建时，_request_ids_num_batched_tokens 属性都会得到一个独立的、空的集合
     _request_ids_num_batched_tokens: Set[str] = field(default_factory=set)
     _request_ids_num_curr_seqs: Set[str] = field(default_factory=set)
     _num_batched_tokens: int = 0
@@ -302,7 +303,7 @@ class Scheduler:
             enable_caching=self.cache_config.enable_prefix_caching)
 
         # Sequence groups in the WAITING state.
-        # Contain new prefill or preempted requests.
+        # Contain new prefill or preempted requests.(need recomputation)
         self.waiting: Deque[SequenceGroup] = deque()
         # Sequence groups in the RUNNING state.
         # Contain decode requests.
@@ -681,6 +682,7 @@ class Scheduler:
         # Copy the queue so that the input queue is not modified.
         waiting_queue = deque([s for s in waiting_queue])
 
+        # 留下来的
         leftover_waiting_sequences: Deque[SequenceGroup] = deque()
         while self._passed_delay(time.time()) and waiting_queue:
             seq_group = waiting_queue[0]
@@ -754,6 +756,7 @@ class Scheduler:
             budget.add_num_seqs(seq_group.request_id, num_new_seqs)
 
         # Queue requests that couldn't be scheduled.
+        # 将 leftover_waiting_sequences 中的所有元素添加到 waiting_queue 的左端
         waiting_queue.extendleft(leftover_waiting_sequences)
         if len(seq_groups) > 0:
             self.prev_prompt = True
