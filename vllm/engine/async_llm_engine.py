@@ -102,6 +102,7 @@ class RequestTracker:
         self._finished_requests: asyncio.Queue[str] = asyncio.Queue()
         self._new_requests: asyncio.Queue[Tuple[AsyncStream,
                                                 dict]] = asyncio.Queue()
+        # 用于在多个协程之间进行信号传递和同步
         self.new_requests_event = asyncio.Event()
 
     def __contains__(self, item):
@@ -161,12 +162,15 @@ class RequestTracker:
         if request_id in self._request_streams:
             raise KeyError(f"Request {request_id} already exists.")
 
+        # 创建请求流
         stream = AsyncStream(request_id)
+        # 将请求放入队列
         self._new_requests.put_nowait((stream, {
             "request_id": request_id,
             **engine_add_request_kwargs
         }))
 
+        # 将事件标记为已触发，任何等待该事件的协程都会被唤醒，继续执行。这通常意味着有新请求到达，处理这些请求的协程可以开始工作了。
         self.new_requests_event.set()
 
         if verbose:
@@ -524,10 +528,12 @@ class AsyncLLMEngine:
         # Initialize the RequestTracker here so it uses the right event loop.
         self._request_tracker = RequestTracker()
 
+        # 返回当前线程的事件循环, 将协程(run_engine_loop)包装成一个Task, 并将其调度在事件循环中执行
         self._background_loop_unshielded = asyncio.get_event_loop(
         ).create_task(self.run_engine_loop())
         self._background_loop_unshielded.add_done_callback(
             partial(_log_task_completion, error_callback=self._error_callback))
+        # 保护一个任务不被取消，同时将任务的返回值赋给 self.background_loop
         self.background_loop = asyncio.shield(self._background_loop_unshielded)
 
     def _init_engine(self, *args,

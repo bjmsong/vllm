@@ -20,6 +20,7 @@ def clear_line(n: int = 1) -> None:
 
 def post_http_request(prompt: str,
                       api_url: str,
+                      model: str,
                       n: int = 1,
                       stream: bool = False) -> requests.Response:
     headers = {"User-Agent": "Test Client"}
@@ -30,6 +31,7 @@ def post_http_request(prompt: str,
         "temperature": 0.0,
         "max_tokens": 16,
         "stream": stream,
+        "model": model
     }
     response = requests.post(api_url,
                              headers=headers,
@@ -50,7 +52,7 @@ def get_streaming_response(response: requests.Response) -> Iterable[List[str]]:
 
 def get_response(response: requests.Response) -> List[str]:
     data = json.loads(response.content)
-    output = data["text"]
+    output = data['choices'][1]["text"]
     return output
 
 
@@ -60,16 +62,17 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--n", type=int, default=4)
     parser.add_argument("--prompt", type=str, default="San Francisco is a")
+    parser.add_argument("--model", type=str, default="/root/autodl-tmp/model_dir/opt-125m")
     parser.add_argument("--stream", action="store_true")
     args = parser.parse_args()
     prompt = args.prompt
-    api_url = f"http://{args.host}:{args.port}/generate"
+    api_url = f"http://{args.host}:{args.port}/v1/completions"
     n = args.n
     stream = args.stream
     model = args.model
 
     print(f"Prompt: {prompt!r}\n", flush=True)
-    response = post_http_request(prompt, api_url, n, stream)
+    response = post_http_request(prompt, api_url, model, n, stream)
 
     if stream:
         num_printed_lines = 0
@@ -81,5 +84,6 @@ if __name__ == "__main__":
                 print(f"Beam candidate {i}: {line!r}", flush=True)
     else:
         output = get_response(response)
-        for i, line in enumerate(output):
-            print(f"Beam candidate {i}: {line!r}", flush=True)
+        print(output)
+        # for i, line in enumerate(output):
+        #     print(f"Beam candidate {i}: {line!r}", flush=True)

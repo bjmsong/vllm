@@ -6,14 +6,33 @@
             "name": "Python: 当前文件",
             "type": "python",
             "request": "launch",
-            "program": "examples/api_client.py",
+            "program": "benchmarks/benchmark_serving.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
+                "--model=/root/autodl-tmp/model_dir/opt-125m",
+                "--dataset-name=random"
             ]
         }
     ]
 }
+
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "python": "/root/miniconda3/envs/vllmenv2/bin/python",
+//             "name": "Python: 当前文件",
+//             "type": "python",
+//             "request": "launch",
+//             "program": "examples/api_client.py",
+//             "console": "integratedTerminal",
+//             "justMyCode": false,
+//             "args": [
+//             ]
+//         }
+//     ]
+// }
 
 // {
 //     "version": "0.2.0",

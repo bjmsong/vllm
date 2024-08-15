@@ -228,6 +228,7 @@ async def async_request_openai_completions(
         "completions"
     ), "OpenAI Completions API URL must end with 'completions'."
 
+    # 创建一个异步 HTTP 客户端会话
     async with aiohttp.ClientSession(timeout=AIOHTTP_TIMEOUT) as session:
         assert not request_func_input.use_beam_search
         payload = {
