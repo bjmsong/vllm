@@ -66,7 +66,6 @@ if __name__ == "__main__":
     api_url = f"http://{args.host}:{args.port}/generate"
     n = args.n
     stream = args.stream
-    model = args.model
 
     print(f"Prompt: {prompt!r}\n", flush=True)
     response = post_http_request(prompt, api_url, n, stream)

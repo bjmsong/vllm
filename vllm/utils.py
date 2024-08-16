@@ -186,7 +186,7 @@ def is_hip() -> bool:
 def is_cpu() -> bool:
     from importlib.metadata import PackageNotFoundError, version
     try:
-        return "cpu" in version("vllm") # 获取安装包的版本号
+        return "cpu" in version("vllm")
     except PackageNotFoundError:
         return False
 

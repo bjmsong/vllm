@@ -301,7 +301,6 @@ class LLM:
                 prompt_token_ids=prompt_token_ids,
             )
         else:
-            # 将 prompts 变量转换为指定的类型 Union[PromptInputs, Sequence[PromptInputs]]，并赋值给inputs
             inputs = cast(Union[PromptInputs, Sequence[PromptInputs]], prompts)
 
         if sampling_params is None:

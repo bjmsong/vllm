@@ -34,7 +34,6 @@ def test_rms_norm(
         torch.cuda.manual_seed(seed)
     torch.set_default_device(device)
     layer = RMSNorm(hidden_size).to(dtype=dtype)
-    # 将权重初始化为符合均值为 1.0 和标准差为 0.1 的正态分布的值
     layer.weight.data.normal_(mean=1.0, std=0.1)
     scale = 1 / (2 * hidden_size)
     x = torch.randn(num_tokens, hidden_size, dtype=dtype)
