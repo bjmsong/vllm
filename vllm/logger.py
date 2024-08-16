@@ -82,6 +82,8 @@ def init_logger(name: str) -> Logger:
     retrieved in such a way that we can be sure the root vllm logger has
     already been configured."""
 
+    # 如果传入的 name 是一个新的名称，getLogger 会创建一个新的日志记录器
+    # 如果 name 已经存在，getLogger 会返回现有的日志记录器实例
     return logging.getLogger(name)
 
 

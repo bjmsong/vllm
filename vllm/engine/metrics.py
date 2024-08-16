@@ -30,9 +30,9 @@ prometheus_client.disable_created_metrics()
 # begin-metrics-definitions
 class Metrics:
     labelname_finish_reason = "finished_reason"
-    _gauge_cls = prometheus_client.Gauge
-    _counter_cls = prometheus_client.Counter
-    _histogram_cls = prometheus_client.Histogram
+    _gauge_cls = prometheus_client.Gauge  # Gauge: 可以上下浮动的数值类型指标
+    _counter_cls = prometheus_client.Counter # Counter: 只增不减的指标，用于统计事件发生的次数
+    _histogram_cls = prometheus_client.Histogram # Histogram: 统计数据分布的指标，能够将数据分为多个桶（buckets）进行统计。
 
     def __init__(self, labelnames: List[str], max_model_len: int):
         # Unregister any existing vLLM collectors

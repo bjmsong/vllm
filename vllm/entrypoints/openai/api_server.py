@@ -73,7 +73,7 @@ async def lifespan(app: FastAPI):
 
 router = APIRouter()
 
-
+# 将 Prometheus 的监控指标挂载到 FastAPI 应用程序上
 def mount_metrics(app: FastAPI):
     # Add prometheus asgi middleware to route /metrics requests
     metrics_route = Mount("/metrics", make_asgi_app())

@@ -1096,6 +1096,17 @@ class LLMEngine:
         else:
             spec_decode_metrics = None
 
+        logger.info(f"""time: {now},
+        {num_running_sys} Running Requests, {num_swapped_sys} Swapped Requests, {num_waiting_sys} Waiting Requests
+        {gpu_cache_usage_sys*100}% GPU Cache Blocks are used, {cpu_cache_usage_sys*100}% CPU Cache Blocks are used,
+        {num_prompt_tokens_iter} prompt tokens, {num_generation_tokens_iter} generated tokens,
+        TTFT(s): {time_to_first_tokens_iter}, TPOT(s): {time_per_output_tokens_iter}, Overall Latency(s): {time_e2e_requests},
+        spec_decode_metrics={spec_decode_metrics}, 
+        num_preemption_iter={num_preemption_iter},
+        The finished Requests has {num_prompt_tokens_requests} prompt tokens, {num_generation_tokens_requests} generated tokens,
+        best_of_requests={best_of_requests},n_requests={n_requests},finished_reason_requests={finished_reason_requests}
+        """)
+
         return Stats(
             now=now,
             # System stats
