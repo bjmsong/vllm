@@ -51,7 +51,6 @@ class SchedulingBudget:
     """
     token_budget: int
     max_num_seqs: int
-    # 每个实例在创建时，_request_ids_num_batched_tokens 属性都会得到一个独立的、空的集合
     _request_ids_num_batched_tokens: Set[str] = field(default_factory=set)
     _request_ids_num_curr_seqs: Set[str] = field(default_factory=set)
     _num_batched_tokens: int = 0

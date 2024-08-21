@@ -308,7 +308,6 @@ class LLMEngine:
         # Create the scheduler.
         # NOTE: the cache_config here have been updated with the numbers of
         # GPU and CPU blocks, which are profiled in the distributed executor.
-        # pipeline_parallel_size = num of Scheduler
         self.scheduler = [
             Scheduler(scheduler_config, cache_config, lora_config,
                       parallel_config.pipeline_parallel_size)
