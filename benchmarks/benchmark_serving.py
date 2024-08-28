@@ -76,7 +76,8 @@ def sample_sharegpt_requests(
     dataset_path: str,
     num_requests: int,
     tokenizer: PreTrainedTokenizerBase,
-    fixed_output_len: Optional[int] = None,
+    seed: int,
+    fixed_output_len: Optional[int] = None
 ) -> List[Tuple[str, int, int]]:
     if fixed_output_len is not None and fixed_output_len < 4:
         raise ValueError("output_len too small")
@@ -90,6 +91,7 @@ def sample_sharegpt_requests(
                 data["conversations"][1]["value"]) for data in dataset]
 
     # Shuffle the dataset.
+    random.seed(seed)
     random.shuffle(dataset)
 
     # Filter out sequences that are too long or too short
@@ -348,6 +350,10 @@ async def benchmark(
                 request_func(request_func_input=request_func_input,
                              pbar=pbar)))
     outputs: List[RequestFuncOutput] = await asyncio.gather(*tasks)
+    
+    # test randomness
+    avg_output_text_len = np.mean([len(output.generated_text) for output in outputs])
+    print(f"avg_output_text_len is {avg_output_text_len}")
 
     if pbar is not None:
         pbar.close()
@@ -449,7 +455,8 @@ def main(args: argparse.Namespace):
             dataset_path=args.dataset,
             num_requests=args.num_prompts,
             tokenizer=tokenizer,
-            fixed_output_len=args.sharegpt_output_len,
+            seed=args.seed,
+            fixed_output_len=args.sharegpt_output_len
         )
 
     elif args.dataset_name == "sharegpt":
@@ -457,7 +464,8 @@ def main(args: argparse.Namespace):
             dataset_path=args.dataset_path,
             num_requests=args.num_prompts,
             tokenizer=tokenizer,
-            fixed_output_len=args.sharegpt_output_len,
+            seed=args.seed,
+            fixed_output_len=args.sharegpt_output_len
         )
 
     elif args.dataset_name == "sonnet":
@@ -501,6 +509,10 @@ def main(args: argparse.Namespace):
 
     else:
         raise ValueError(f"Unknown dataset: {args.dataset_name}")
+
+    # test randomness
+    avg_prompt_len = np.mean([prompt[1] for prompt in input_requests])
+    print(f"avg_prompt_len is {avg_prompt_len}")
 
     benchmark_result = asyncio.run(
         benchmark(

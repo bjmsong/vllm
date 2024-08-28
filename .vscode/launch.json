@@ -10,8 +10,11 @@
 //             "console": "integratedTerminal",
 //             "justMyCode": false,
 //             "args": [
-//                 "--model=/root/autodl-tmp/model_dir/opt-125m",
-//                 "--dataset-name=random"
+//                 "--model=/root/autodl-tmp/model_dir",
+//                 "--dataset-name=sharegpt",
+//                 "--dataset-path=/root/autodl-tmp/ShareGPT_V3_unfiltered_cleaned_split.json",
+//                 "--seed=42",
+//                 "--num-prompts=1000"
 //             ]
 //         }
 //     ]
@@ -34,26 +37,6 @@
 //     ]
 // }
 
-// {
-//     "version": "0.2.0",
-//     "configurations": [
-//         {
-//             "python": "/root/miniconda3/envs/vllmenv2/bin/python",
-//             "name": "Python: 当前文件",
-//             "type": "python",
-//             "request": "launch",
-//             "program": "vllm/entrypoints/openai/api_server.py",
-//             "console": "integratedTerminal",
-//             "justMyCode": false,
-//             "args": [
-//                 "--model=/root/autodl-tmp/model_dir/opt-125m",
-//                 "--chat-template=/root/autodl-tmp/vllm/examples/template_chatml.jinja"
-//             ]
-//         }
-//     ]
-// }
-
-
 {
     "version": "0.2.0",
     "configurations": [
@@ -62,11 +45,30 @@
             "name": "Python: 当前文件",
             "type": "python",
             "request": "launch",
-            "program": "examples/offline_inference.py",
+            "program": "vllm/entrypoints/openai/api_server.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
+                "--model=/root/autodl-tmp/model_dir"
             ]
         }
     ]
 }
+
+
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "python": "/root/miniconda3/envs/vllmenv2/bin/python",
+//             "name": "Python: 当前文件",
+//             "type": "python",
+//             "request": "launch",
+//             "program": "examples/offline_inference.py",
+//             "console": "integratedTerminal",
+//             "justMyCode": false,
+//             "args": [
+//             ]
+//         }
+//     ]
+// }
