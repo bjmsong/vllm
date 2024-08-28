@@ -81,6 +81,7 @@ class Worker(LocalOrDistributedWorkerBase):
             or (speculative_config.draft_model_config.hf_config.model_type
                 not in ["medusa", "mlp_speculator"]) \
                     else {"return_hidden_states": True}
+                    
         ModelRunnerClass: Type[GPUModelRunnerBase] = ModelRunner
         if model_runner_cls is not None:
             ModelRunnerClass = model_runner_cls
