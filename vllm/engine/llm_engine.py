@@ -4,6 +4,7 @@ from typing import (TYPE_CHECKING, Any, ClassVar, Dict, Iterable, List,
                     Mapping, Optional)
 from typing import Sequence as GenericSequence
 from typing import Set, Type, TypeVar, Union
+import torch
 
 import vllm.envs as envs
 from vllm.config import (CacheConfig, DecodingConfig, DeviceConfig,
@@ -898,8 +899,16 @@ class LLMEngine:
             raise NotImplementedError(
                 "Pipeline parallelism is only supported through AsyncLLMEngine "
                 "as performance will be severely degraded otherwise.")
+        
+        # t1 = time.perf_counter()
         seq_group_metadata_list, scheduler_outputs = self.scheduler[
             0].schedule()
+        # t2 = time.perf_counter()
+        # print(f"Schedule Time: {1000*(t2 - t1)} ms")
+        
+        # start = torch.cuda.Event(enable_timing=True)
+        # end = torch.cuda.Event(enable_timing=True)
+        # start.record()
 
         if not scheduler_outputs.is_empty():
             finished_requests_ids = self.scheduler[
@@ -916,10 +925,19 @@ class LLMEngine:
                 execute_model_req=execute_model_req)
         else:
             output = []
+            
+        # print(output[0])
+        # t3 = time.perf_counter()
+        # end.record()
+        # torch.cuda.synchronize()
+        # print(f"Execute Time: {start.elapsed_time(end)} ms")
+        # print(f"Execute Time: {1000*(t3 - t2)} ms")
 
         request_outputs = self._process_model_outputs(
             output, scheduler_outputs.scheduled_seq_groups,
             scheduler_outputs.ignored_seq_groups, seq_group_metadata_list)
+        # t4 = time.perf_counter()
+        # print(f"Process Output Time: {1000*(t4 - t3)} ms")
 
         # Log stats.
         self.do_log_stats(scheduler_outputs, output)
@@ -1098,7 +1116,7 @@ class LLMEngine:
         logger.info(f"""time: {now},
         {num_running_sys} Running Requests, {num_swapped_sys} Swapped Requests, {num_waiting_sys} Waiting Requests
         {gpu_cache_usage_sys*100}% GPU Cache Blocks are used, {cpu_cache_usage_sys*100}% CPU Cache Blocks are used,
-        {num_prompt_tokens_iter} prompt tokens, {num_generation_tokens_iter} generated tokens,
+        {num_prompt_tokens_iter} prompt tokens, {num_generation_tokens_iter} generated tokens,  {num_prompt_tokens_iter+num_generation_tokens_iter} overall tokens,
         TTFT(s): {time_to_first_tokens_iter}, TPOT(s): {time_per_output_tokens_iter}, Overall Latency(s): {time_e2e_requests},
         spec_decode_metrics={spec_decode_metrics}, 
         num_preemption_iter={num_preemption_iter},

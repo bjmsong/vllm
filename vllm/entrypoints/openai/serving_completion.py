@@ -31,6 +31,7 @@ from vllm.sequence import Logprob
 from vllm.tracing import (contains_trace_headers, extract_trace_headers,
                           log_tracing_disabled_warning)
 from vllm.utils import merge_async_iterators, random_uuid
+from vllm.async_timer import async_timed
 
 logger = init_logger(__name__)
 
@@ -61,6 +62,7 @@ class OpenAIServingCompletion(OpenAIServing):
                          request_logger=request_logger,
                          return_tokens_as_token_ids=return_tokens_as_token_ids)
 
+    @async_timed()
     async def create_completion(self, request: CompletionRequest,
                                 raw_request: Request):
         """Completion API similar to OpenAI's API.
@@ -108,7 +110,8 @@ class OpenAIServingCompletion(OpenAIServing):
                     sampling_params.logits_processors = []
                 sampling_params.logits_processors.append(
                     guided_decode_logit_processor)
-
+            
+            t1 = time.perf_counter()
             prompts = list(
                 self._tokenize_prompt_input_or_inputs(
                     request,
@@ -118,6 +121,8 @@ class OpenAIServingCompletion(OpenAIServing):
                     truncate_prompt_tokens,
                     add_special_tokens=request.add_special_tokens,
                 ))
+            t2 = time.perf_counter()
+            print(f"Tokenize Input Time: {1000*(t2 - t1)} ms")
 
             for i, prompt_inputs in enumerate(prompts):
                 request_id_item = f"{request_id}-{i}"
