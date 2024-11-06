@@ -241,11 +241,11 @@ class _AsyncLLMEngine(LLMEngine):
         and updates the scheduler with the model outputs. Finally, it decodes
         the sequences and returns the newly generated results.
         """
-        t1 = time.perf_counter()
+        # t1 = time.perf_counter()
         seq_group_metadata_list, scheduler_outputs = self.scheduler[
             virtual_engine].schedule()
-        t2 = time.perf_counter()
-        print(f"Schedule Time: {1000*(t2 - t1)} ms")
+        # t2 = time.perf_counter()
+        # print(f"Schedule Time: {1000*(t2 - t1)} ms")
 
         # start = torch.cuda.Event(enable_timing=True)
         # end = torch.cuda.Event(enable_timing=True)
@@ -269,17 +269,17 @@ class _AsyncLLMEngine(LLMEngine):
         else:
             output = []
 
-        t3 = time.perf_counter()
+        # t3 = time.perf_counter()
         # end.record()
-        torch.cuda.synchronize()
+        # torch.cuda.synchronize()
         # print(f"Execute Time: {start.elapsed_time(end)} ms")
-        print(f"Execute Time: {1000*(t3 - t2)} ms")
+        # print(f"Execute Time: {1000*(t3 - t2)} ms")
 
         request_outputs = self._process_model_outputs(
             output, scheduler_outputs.scheduled_seq_groups,
             scheduler_outputs.ignored_seq_groups, seq_group_metadata_list)
-        t4 = time.perf_counter()
-        print(f"Process Output Time: {1000*(t4 - t3)} ms")
+        # t4 = time.perf_counter()
+        # print(f"Process Output Time: {1000*(t4 - t3)} ms")
 
         # Log stats.
         self.do_log_stats(scheduler_outputs, output)
@@ -583,7 +583,7 @@ class AsyncLLMEngine:
         new_requests, finished_requests = (
             self._request_tracker.get_new_and_finished_requests())
 
-        t1 = time.perf_counter()
+        # t1 = time.perf_counter()
         for new_request in new_requests:
             # Add the request into the vLLM engine's waiting queue.
             # TODO: Maybe add add_request_batch to reduce Ray overhead
@@ -600,9 +600,9 @@ class AsyncLLMEngine:
                     e,
                     verbose=self.log_requests,
                 )
-        t2 = time.perf_counter()
-        print("=================================================")
-        print(f"Add Request Time: {1000*(t2 - t1)} ms")
+        # t2 = time.perf_counter()
+        # print("=================================================")
+        # print(f"Add Request Time: {1000*(t2 - t1)} ms")
 
         if finished_requests:
             await self._engine_abort(finished_requests)
@@ -613,17 +613,17 @@ class AsyncLLMEngine:
             request_outputs = await self.engine.step_async(virtual_engine)
 
         print(request_outputs[0])
-        t3 = time.perf_counter()
-        print(f"step_async Time: {1000*(t3 - t2)} ms")
+        # t3 = time.perf_counter()
+        # print(f"step_async Time: {1000*(t3 - t2)} ms")
         # Put the outputs into the corresponding streams.
         finished = True
         for request_output in request_outputs:
             self._request_tracker.process_request_output(
                 request_output, verbose=self.log_requests)
             finished = finished and request_output.finished
-        t4 = time.perf_counter()
-        print(f"Process Request Output Time: {1000*(t4 - t3)} ms")
-        print("============================================\n")
+        # t4 = time.perf_counter()
+        # print(f"Process Request Output Time: {1000*(t4 - t3)} ms")
+        # print("============================================\n")
 
         return not finished
 

@@ -41,6 +41,9 @@ from vllm.usage.usage_lib import UsageContext
 from vllm.utils import FlexibleArgumentParser
 from vllm.version import __version__ as VLLM_VERSION
 
+import os
+os.environ["PYTHONASYNCIODEBUG"] = "1"
+
 TIMEOUT_KEEP_ALIVE = 5  # seconds
 
 engine: AsyncLLMEngine
@@ -61,7 +64,7 @@ async def lifespan(app: FastAPI):
     async def _force_log():
         while True:
             await asyncio.sleep(10)
-            await engine.do_log_stats()
+            # await engine.do_log_stats()
 
     if not engine_args.disable_log_stats:
         task = asyncio.create_task(_force_log())

@@ -220,7 +220,7 @@ class LocalOrDistributedWorkerBase(WorkerBase):
     ) -> Optional[List[SamplerOutput]]:
         """Executes at least one model step on the given sequences, unless no
         sequences are provided."""
-        t1 = time.perf_counter()
+        # t1 = time.perf_counter()
         if self.is_driver_worker:
             if execute_model_req is None:
                 if self.do_metadata_broadcast:
@@ -260,12 +260,12 @@ class LocalOrDistributedWorkerBase(WorkerBase):
                 self.model_runner.
                 make_model_input_from_broadcasted_tensor_dict(broadcast_data))
 
-        t2 = time.perf_counter()
-        print(f"    Prepare WorkerInput Time: {1000*(t2 - t1)} ms")
+        # t2 = time.perf_counter()
+        # print(f"    Prepare WorkerInput Time: {1000*(t2 - t1)} ms")
 
         self.execute_worker(worker_input)
-        t3 = time.perf_counter()
-        print(f"    Execute Worker Time: {1000*(t3 - t2)} ms")
+        # t3 = time.perf_counter()
+        # print(f"    Execute Worker Time: {1000*(t3 - t2)} ms")
 
         # If there is no input, we don't need to execute the model.
         if worker_input.num_seq_groups == 0:

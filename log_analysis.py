@@ -8,7 +8,8 @@ def log_filter(args: argparse.Namespace):
         '"POST /v1/completions HTTP/1.1"',
         "Received request cmpl-",
         "[Async] finished",
-        "[Async] starting"
+        "[Async] starting",
+        "Tokenize Input Time"
     ]
     before_dot, after_dot = args.filename.split('.', 1)
     
@@ -20,8 +21,8 @@ def log_filter(args: argparse.Namespace):
 def get_stats(args: argparse.Namespace, pattern):
 
     with open("logs/" + args.filename, "r") as file:
-        # 跳过前4000行
-        for _ in range(4000):
+        # 跳过前10000行
+        for _ in range(10000):
             next(file)
         log_data = file.read()
 
@@ -62,18 +63,18 @@ if __name__ == "__main__":
     print("=============Running Deque Number==============================")
     pattern = r"(\d+) Running Requests"
     get_stats(args, pattern)
-    # print("=============Waiting Deque Number==============================")
-    # pattern = r"(\d+) Waiting Requests"
-    # get_stats(args, pattern)
-    # print("=============Swapped Deque Number==============================")
-    # pattern = r"(\d+) Swapped Requests"
-    # get_stats(args, pattern)
+    print("=============Waiting Deque Number==============================")
+    pattern = r"(\d+) Waiting Requests"
+    get_stats(args, pattern)
+    print("=============Swapped Deque Number==============================")
+    pattern = r"(\d+) Swapped Requests"
+    get_stats(args, pattern)
     print("=============overall tokens Number==============================")
     pattern = r"(\d+\.\d+) overall tokens"
     get_stats(args, pattern)  
-    # print("=============prompt tokens Number==============================")
-    # pattern = r"(\d+) prompt tokens"
-    # get_stats(args, pattern)    
-    # print("=============generated tokens Number==============================")
-    # pattern = r"(\d+\.\d+) generated tokens"
-    # get_stats(args, pattern)
+    print("=============prompt tokens Number==============================")
+    pattern = r"(\d+) prompt tokens"
+    get_stats(args, pattern)    
+    print("=============generated tokens Number==============================")
+    pattern = r"(\d+\.\d+) generated tokens"
+    get_stats(args, pattern)

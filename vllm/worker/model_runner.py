@@ -1355,7 +1355,7 @@ class ModelRunner(GPUModelRunnerBase[ModelInputForGPUWithSamplingMetadata]):
             "request_ids_to_seq_ids": model_input.request_ids_to_seq_ids,
         } if self.has_seqlen_agnostic else {}
 
-        t1 = time.perf_counter()
+        # t1 = time.perf_counter()
         
         hidden_or_intermediate_states = model_executable(
             input_ids=model_input.input_tokens,
@@ -1369,8 +1369,8 @@ class ModelRunner(GPUModelRunnerBase[ModelInputForGPUWithSamplingMetadata]):
         
         # synchronous gpu & cpu
         print(hidden_or_intermediate_states[0])
-        t2 = time.perf_counter()
-        print(f"    Model Forward Time: {1000*(t2 - t1)} ms")
+        # t2 = time.perf_counter()
+        # print(f"    Model Forward Time: {1000*(t2 - t1)} ms")
 
         # Compute the logits in the last pipeline stage.
         if not get_pp_group().is_last_rank:
@@ -1379,9 +1379,9 @@ class ModelRunner(GPUModelRunnerBase[ModelInputForGPUWithSamplingMetadata]):
         logits = self.model.compute_logits(hidden_or_intermediate_states,
                                            model_input.sampling_metadata)
         # print(logits[0])
-        torch.cuda.synchronize()
-        t3 = time.perf_counter()
-        print(f"    Compute Logits Time: {1000*(t3 - t2)} ms")
+        # torch.cuda.synchronize()
+        # t3 = time.perf_counter()
+        # print(f"    Compute Logits Time: {1000*(t3 - t2)} ms")
 
         if not self.is_driver_worker:
             return []
@@ -1392,9 +1392,9 @@ class ModelRunner(GPUModelRunnerBase[ModelInputForGPUWithSamplingMetadata]):
             sampling_metadata=model_input.sampling_metadata,
         )
         # print(output[0])
-        torch.cuda.synchronize()
-        t4 = time.perf_counter()
-        print(f"    Sample Time: {1000*(t4 - t3)} ms")
+        # torch.cuda.synchronize()
+        # t4 = time.perf_counter()
+        # print(f"    Sample Time: {1000*(t4 - t3)} ms")
 
         if self.return_hidden_states:
             # we only need to pass hidden states of most recent token
